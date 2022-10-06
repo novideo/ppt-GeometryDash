@@ -1,5 +1,6 @@
 package geometrydash;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
 
@@ -28,13 +29,13 @@ public class GeometryDash {
         int currentPosition = 0;
 
         for(int i = 0; i < playList.size(); i++) {
+            if(currentPosition == level.length() - 1) break;
             currentPosition += playList.get(i);
             String nextPlacement = levelList.get(currentPosition);
-            if(currentPosition == (level.length() - 1)) return true;
+            if(currentPosition == (level.length() - 1) && i == (playList.size() - 1)) return true;
             if(nextPlacement.equals("^")) return false;
         }
-
-        return true;
+        return false;
     }
 
     /**
@@ -49,8 +50,49 @@ public class GeometryDash {
      */
     public static Set<String> successfulPlays(String level, Set<String> possiblePlays,
                                               int startingEnergy, int targetRestingEnergy) {
-        // TODO: Implement this method
-        return null;
+        Set<String> successfulPlays = new HashSet<>();
+        ArrayList<String> levelList = new ArrayList<String>();
+        for(int i = 0; i < level.length(); i++) {
+            levelList.add(level.substring(i, i+1));
+        }
+
+        //Go through each item in Set
+        for(String play : possiblePlays) {
+            int currentEnergy = startingEnergy;
+            //Convert play to list
+            ArrayList<Integer> playList = new ArrayList<Integer>();
+            for(int i = 0; i < play.length(); i++) {
+                playList.add(Integer.parseInt(play.substring(i, i+1)));
+            }
+
+            //Check if first square is a spike
+            if(!levelList.get(0).equals("_")) continue;
+            int currentPosition = 0;
+
+            for(int i = 0; i < playList.size(); i++) {
+                if(currentPosition == level.length() - 1) break;
+                int currentMove = playList.get(i);
+                currentPosition += currentMove; //Move
+
+                //Adjust energy
+                if(currentMove == 0 && currentPosition != (level.length() - 1)) currentEnergy++;
+                currentEnergy -= currentMove;
+
+                String nextPlacement = levelList.get(currentPosition); //Gets the spot it lands on
+
+                if(nextPlacement.equals("^")) break;
+                if(nextPlacement.equals("*")) {
+                    currentPosition += 4;
+                    if(currentPosition > level.length()) break; //Unsuccessful if jumps out of the level
+                }
+                if(currentPosition == (level.length() - 1) && currentEnergy >= targetRestingEnergy && i == (playList.size() - 1)) {
+                    successfulPlays.add(play);
+                    break;
+                }
+            }
+
+        }
+        return successfulPlays;
     }
 
     /**
