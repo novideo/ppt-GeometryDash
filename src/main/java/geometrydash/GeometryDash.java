@@ -1,6 +1,7 @@
 package geometrydash;
 
 import java.util.Set;
+import java.util.ArrayList;
 
 public class GeometryDash {
     /**
@@ -10,8 +11,30 @@ public class GeometryDash {
      * @return true if the play completes the level and false otherwise
      */
     public static boolean isSuccessfulPlay(String level, String play) {
-        // TODO: Implement this method
-        return false;
+        //Turn level into string
+        ArrayList<String> levelList = new ArrayList<String>();
+        ArrayList<Integer> playList = new ArrayList<Integer>();
+        //Convert level to list
+        for(int i = 0; i < level.length(); i++) {
+            levelList.add(level.substring(i, i+1));
+        }
+        //Convert play to list
+        for(int i = 0; i < play.length(); i++) {
+            playList.add(Integer.parseInt(play.substring(i, i+1)));
+        }
+
+        //Check if first square is a spike
+        if(!levelList.get(0).equals("_")) return false;
+        int currentPosition = 0;
+
+        for(int i = 0; i < playList.size(); i++) {
+            currentPosition += playList.get(i);
+            String nextPlacement = levelList.get(currentPosition);
+            if(currentPosition == (level.length() - 1)) return true;
+            if(nextPlacement.equals("^")) return false;
+        }
+
+        return true;
     }
 
     /**
