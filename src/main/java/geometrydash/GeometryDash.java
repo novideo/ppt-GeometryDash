@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class GeometryDash {
     /**
-     * Returns whether the given level can be completed using the given play.
+     * Returns whether the given level can be completed using the given play. test
      * @param level is not null and not empty
      * @param play is not null and not empty
      * @return true if the play completes the level and false otherwise
